@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Share Location</title>
+</head>
+
+<body>
+
+<h2>Share Your Location</h2>
+<button onclick="sendLocation()">Approve & Share</button>
+
+<p id="status"></p>
+
+<script>
+
+function sendLocation(){
+
+    if(!navigator.geolocation){
+        alert("Geolocation not supported");
+        return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+
+        function(pos){
+
+            let lat = pos.coords.latitude;
+            let lon = pos.coords.longitude;
+
+            // SEND TO SERVER
+            fetch("https://YOUR_SERVER/save_location", {
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify({lat:lat, lon:lon})
+            });
+
+            document.getElementById("status").innerHTML =
+                "Location sent successfully";
+        },
+
+        function(){
+            document.getElementById("status").innerHTML =
+                "Permission denied";
+        }
+    );
+}
+
+</script>
+
+</body>
+</html>
